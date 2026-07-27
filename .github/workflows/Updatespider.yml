@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  actions: write          # ← 添加这一行，允许删除 workflow runs
 
 jobs:
   update-spider:
