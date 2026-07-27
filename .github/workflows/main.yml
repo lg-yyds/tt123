@@ -2,8 +2,12 @@ name: Sync N3RD
 
 on:
   schedule:
-    - cron: '50 02 * * *'
+    - cron: '55 02 * * *'
   workflow_dispatch:  # 允许手动触发
+
+permissions:
+  contents: write
+  actions: write   # 用于删除旧的 workflow runs
 
 jobs:
   clone:
@@ -25,7 +29,6 @@ jobs:
       - name: Sync files from upstream (keep local-only files)
         run: |
           echo "Syncing files from N3RD (overwrite existing + add new, keep local-only)..."
-          # 使用 rsync：更新已有文件、添加新文件，不删除本地独有文件，排除 .git
           rsync -av --exclude='.git' /tmp/N3RD/ ./
           echo "Sync completed."
 
@@ -47,7 +50,6 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add .
-          # 仅在有变更时才提交
           if git diff --staged --quiet; then
             echo "No changes to commit."
           else
@@ -63,3 +65,20 @@ jobs:
           echo "Cleaning up..."
           rm -rf /tmp/N3RD
           echo "Cleanup completed."
+
+      # 只保留最新 3 条工作流运行记录
+      - name: Keep only the latest 3 workflow runs
+        run: |
+          echo "Cleaning old workflow runs (keep latest 3)..."
+          # 列出本工作流的运行（默认按时间倒序），从第 4 条开始删除
+          gh run list \
+            --workflow="Sync N3RD" \
+            --limit 50 \
+            --json databaseId \
+            --jq '.[3:][].databaseId' | while read -r id; do
+              echo "Deleting run $id"
+              gh run delete "$id" || true
+            done
+          echo "Cleanup of old runs completed."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
