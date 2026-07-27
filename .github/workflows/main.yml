@@ -14,27 +14,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 克隆目标仓库
+      # 克隆目标仓库到临时目录（不污染工作区）
       - name: Clone n3rddd/N3RD repository
         run: |
           echo "Cloning n3rddd/N3RD repository..."
-          git clone https://github.com/n3rddd/N3RD.git || echo "Clone failed"
+          git clone --depth 1 https://github.com/n3rddd/N3RD.git /tmp/N3RD
           echo "Clone completed."
 
-      # 复制文件到当前仓库
-      - name: Copy files
+      # 同步上游文件：覆盖/新增共有文件，保留本仓库独有文件
+      - name: Sync files from upstream (keep local-only files)
         run: |
-          echo "Copying files..."
-          cp -r N3RD/* .
-          echo "Files copied."
+          echo "Syncing files from N3RD (overwrite existing + add new, keep local-only)..."
+          # 使用 rsync：更新已有文件、添加新文件，不删除本地独有文件，排除 .git
+          rsync -av --exclude='.git' /tmp/N3RD/ ./
+          echo "Sync completed."
 
       # 复制 JN/EXT/JS/YTTV.txt 到 JN/EXT/TXT 目录
       - name: Copy YTTV.txt to target directory
         run: |
           echo "Copying YTTV.txt to JN/EXT/TXT..."
-          mkdir -p JN/EXT/TXT  # 确保目标目录存在
-          cp JN/EXT/JS/YTTV.txt JN/EXT/TXT/
-          echo "YTTV.txt copied."
+          mkdir -p JN/EXT/TXT
+          if [ -f JN/EXT/JS/YTTV.txt ]; then
+            cp JN/EXT/JS/YTTV.txt JN/EXT/TXT/
+            echo "YTTV.txt copied."
+          else
+            echo "YTTV.txt not found, skip."
+          fi
 
       # 提交并推送更改到自己的仓库
       - name: Commit and push changes
@@ -42,14 +47,19 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add .
-          git commit -m "Sync and copy"
-          git push origin ${{ github.ref_name }}
+          # 仅在有变更时才提交
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Sync from n3rddd/N3RD"
+            git push origin ${{ github.ref_name }}
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # 清理克隆的仓库
+      # 清理临时克隆
       - name: Clean up
         run: |
           echo "Cleaning up..."
-          rm -rf N3RD
+          rm -rf /tmp/N3RD
           echo "Cleanup completed."
