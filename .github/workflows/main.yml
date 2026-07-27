@@ -2,7 +2,7 @@ name: Sync N3RD
 
 on:
   schedule:
-    - cron: '55 02 * * *'
+    - cron: '50 02 * * *'
   workflow_dispatch:  # 允许手动触发
 
 jobs:
