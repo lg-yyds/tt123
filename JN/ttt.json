@@ -20,7 +20,7 @@
 {"name":"直播","type":0,"url":"https://ghproxy.cc/https://raw.githubusercontent.com/lg-yyds/gdtvapi/refs/heads/master/output/result.txt","ua":"okhttp/3.15","epg":"http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}","logo":"https://epg.112114.xyz/logo/{name}.png","catchup":{"type":"append","source":"?livemode=4&starttime=${(b)yyyyMMdd'T'HHmm}00.00Z&endtime=${(e)yyyyMMdd'T'HHmm}00.00Z"}},
 {"name":"咪咕","type":0,"url":"https://gh.927223.xyz/https://raw.githubusercontent.com/develop202/migu_video/refs/heads/main/interface.txt","playerType":2,"epg":"http://diyp5.112114.xyz/?ch={name}&date={date}","logo": "https://epg.112114.xyz/logo/{name}.png"},
 {"name":"IPTV","type":0,"playerType":2,"url":"https://live.ottiptv.cc/iptv.m3u?userid=5803665715&sign=65177c4b80fc8438071a048ac5aec7980991f960675556c5c93cdb3c5a6f7082e86f69204a098d26a1bc196b6c880d567ed4a2e65c270ce37ca71e387de6289dbf6a784a3c5e9c&auth_token=b6823db883fc12f91cf1127973951993","ua":"okHttp/Mod-1.5.0.0"},
-{"name":"世界杯","type":0,"url":"http://82.156.243.185:33389/fwc.m3u","playerType":2},
+{"name":"🎬直播","type":0,"url":"https://gh.jasonzeng.dev/https://raw.githubusercontent.com/dongtian00/box/refs/heads/520/lib/live.txt","ua":"okhttp/3.15","epg":"http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}","logo":"https://epg.112114.xyz/logo/{name}.png","catchup":{"type":"append","source":"?livemode=4&starttime=${(b)yyyyMMdd'T'HHmm}00.00Z&endtime=${(e)yyyyMMdd'T'HHmm}00.00Z"}},
 {"name":"电视直播","type":0,"url":"https://cors.isteed.cc/https://raw.githubusercontent.com/n3rddd/CTVLive/main/live.txt","ua":"okhttp/3.15","epg":"http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}","logo":"https://epg.112114.xyz/logo/{name}.png"},
 {"name":"轻量直播","type":0,"url":"https://cors.isteed.cc/https://raw.githubusercontent.com/n3rddd/CTVLive/main/litelive.m3u","ua":"okhttp/3.15","epg":"http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}","logo":"https://epg.112114.xyz/logo/{name}.png"},
 {"name":"WEB直播","type":0,"url":"./EXT/LIVE/web.txt","ua":"okhttp/3.15","epg":"http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}","logo":"https://epg.112114.xyz/logo/{name}.png"},
@@ -36,7 +36,9 @@
 "sites":[
 
 // ⇩⇩ 榜单直播 ⇩⇩ 
-
+{"key":"drjs_4kvm","name":"🎬4K影视(DRPY)","type":3,"api":"./dr_py/libs/drpy2.min.js","searchable":1,"quickSearch":1,"changeable":1,"filterable":0,"ext":"./dr_py/js/4kvm.js"},
+{"key":"drjs_mtyy","name":"🌾麦田(DRPY)","type":3,"api":"./dr_py/libs/drpy2.min.js","searchable":1,"quickSearch":1,"changeable":1,"filterable":0,"ext":"./dr_py/js/mtyy.js"},
+{"key":"drjs_ppnix","name":"🎬ppnix(DRPY)","type":3,"api":"./dr_py/libs/drpy2.min.js","searchable":1,"quickSearch":1,"changeable":1,"filterable":0,"ext":"./dr_py/js/ppnix.js"},
 {"key":"csp_Douban_LEM","name":"📡我的豆瓣(SP)","type":3,"api":"csp_DoubanLEM","searchable":0,"ext":"./N3RD/T/douban.json"},
 {"key":"csp_DouDouGuard","name":"📡豆瓣片单(SP)","type":3,"api":"csp_DouDouGuard","searchable":0},
 {"key":"drjs_豆瓣推荐","name":"📡豆瓣推荐(DRPY)","type":3,"api":"./dr_py/libs/drpy2.min.js","searchable":0,"quickSearch":0,"filterable":0,"ext":"./dr_py/js/豆瓣[官].js"},
