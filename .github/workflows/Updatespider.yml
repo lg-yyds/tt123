@@ -60,3 +60,17 @@ jobs:
         git add ./JN/tv.json ./JN/tvy.json ./JN/ttt.json
         git commit -m "Update spider value"
         git push
+
+        # 只保留最新 3 条工作流运行记录
+    - name: Keep only the latest 3 workflow runs
+      run: |
+          echo "Cleaning old workflow runs (keep latest 3)..."
+          # 列出本工作流的运行（默认按时间倒序），从第 4 条开始删除
+          gh run list \
+            --workflow="Sync N3RD" \
+            --limit 50 \
+            --json databaseId \
+            --jq '.[3:][].databaseId' | while read -r id; do
+              echo "Deleting run $id"
+              gh run delete "$id" || true
+            done
