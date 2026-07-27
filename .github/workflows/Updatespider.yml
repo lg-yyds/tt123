@@ -68,7 +68,7 @@ jobs:
       echo "Cleaning old workflow runs (keep latest 3)..."
       # 列出本工作流的运行（默认按时间倒序），从第 4 条开始删除
         gh run list \
-        --workflow="Sync N3RD" \
+        --workflow="Update Spider Value" \
         --limit 50 \
         --json databaseId \
         --jq '.[3:][].databaseId' | while read -r id; do
@@ -76,5 +76,5 @@ jobs:
            gh run delete "$id" || true
             done
           echo "Cleanup of old runs completed."
-      env:
+    env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
