@@ -1,22 +1,20 @@
 name: Sync N3RD
-
 on:
   schedule:
     - cron: '55 02 * * *'
-  workflow_dispatch:  # 允许手动触发
+  workflow_dispatch: # 允许手动触发
 
 permissions:
   contents: write
-  actions: write   # 用于删除旧的 workflow runs
+  actions: write # 用于删除旧的 workflow runs
 
 jobs:
   clone:
     runs-on: ubuntu-latest
-
     steps:
       # 检出当前仓库
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # 克隆目标仓库到临时目录（不污染工作区）
       - name: Clone n3rddd/N3RD repository
@@ -24,6 +22,21 @@ jobs:
           echo "Cloning n3rddd/N3RD repository..."
           git clone --depth 1 https://github.com/n3rddd/N3RD.git /tmp/N3RD
           echo "Clone completed."
+
+      # 只保留 J/ 目录下修改时间最新的 4 个 lem*.jar
+      - name: Keep only the latest 4 lem*.jar in J/ (by mtime)
+        run: |
+          echo "Pruning old lem*.jar in /tmp/N3RD/J (keep latest 4 by modification time)..."
+          if [ -d /tmp/N3RD/J ]; then
+            # 按修改时间倒序，从第 5 个开始删除
+            ls -1t /tmp/N3RD/J/lem[0-9]*.jar 2>/dev/null | \
+              tail -n +5 | \
+              xargs -r rm -v || true
+            echo "Remaining lem*.jar files (newest first):"
+            ls -1t /tmp/N3RD/J/lem[0-9]*.jar 2>/dev/null || echo "(none)"
+          else
+            echo "J/ directory not found, skip pruning."
+          fi
 
       # 同步上游文件：覆盖/新增共有文件，保留本仓库独有文件
       - name: Sync files from upstream (keep local-only files)
@@ -70,7 +83,6 @@ jobs:
       - name: Keep only the latest 3 workflow runs
         run: |
           echo "Cleaning old workflow runs (keep latest 3)..."
-          # 列出本工作流的运行（默认按时间倒序），从第 4 条开始删除
           gh run list \
             --workflow="Sync N3RD" \
             --limit 50 \
