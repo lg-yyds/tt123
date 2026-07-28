@@ -23,21 +23,6 @@ jobs:
           git clone --depth 1 https://github.com/n3rddd/N3RD.git /tmp/N3RD
           echo "Clone completed."
 
-      # 只保留 J/ 目录下修改时间最新的 4 个 lem*.jar
-      - name: Keep only the latest 4 lem*.jar in J/ (by mtime)
-        run: |
-          echo "Pruning old lem*.jar in /tmp/N3RD/J (keep latest 4 by modification time)..."
-          if [ -d /tmp/N3RD/J ]; then
-            # 按修改时间倒序，从第 5 个开始删除
-            ls -1t /tmp/N3RD/J/lem[0-9]*.jar 2>/dev/null | \
-              tail -n +5 | \
-              xargs -r rm -v || true
-            echo "Remaining lem*.jar files (newest first):"
-            ls -1t /tmp/N3RD/J/lem[0-9]*.jar 2>/dev/null || echo "(none)"
-          else
-            echo "J/ directory not found, skip pruning."
-          fi
-
       # 同步上游文件：覆盖/新增共有文件，保留本仓库独有文件
       - name: Sync files from upstream (keep local-only files)
         run: |
